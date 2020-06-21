@@ -1,11 +1,27 @@
-module Bounce exposing (Bounce, delay, init, pop, push, steady)
+module Bounce exposing
+    ( Bounce, steady
+    , init, push, pop
+    , delay
+    )
 
 {-|
 
 
-# Bounce
+# Bounce state
 
 The most simple debouncer for Elm.
+
+@docs Bounce, steady
+
+
+# State manipulation
+
+@docs init, push, pop
+
+
+# Command
+
+@docs delay
 
 -}
 
@@ -13,8 +29,17 @@ import Process
 import Task
 
 
+{-| Event counter counts in-flight events
+-}
 type Bounce
     = Bounce Int
+
+
+{-| State is steady, i.e. there is no in-flight events.
+-}
+steady : Bounce -> Bool
+steady (Bounce counter) =
+    counter == 0
 
 
 {-| Initial steady state.
@@ -36,13 +61,6 @@ push (Bounce counter) =
 pop : Bounce -> Bounce
 pop (Bounce counter) =
     Bounce (counter - 1)
-
-
-{-| State is steady, i.e. there is no in-flight events.
--}
-steady : Bounce -> Bool
-steady (Bounce counter) =
-    counter == 0
 
 
 {-| Delay event, time in milliseconds.
